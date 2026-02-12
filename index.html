@@ -70,7 +70,7 @@
             display: block;
             position: relative;
             z-index: 2;
-            margin-bottom: -60px;   
+            margin-bottom: -60px;
         }
 
         .hero {
@@ -341,12 +341,11 @@
 
             <div class="summary">
                 <div>
-                    <div class="section-title">TERMS & CONDITIONS</div>
-                    Payment should be completed within 30 days of invoice date.
+                    <div class="section-title">MESSAGE</div>
+                    Thank you for choosing Witness Event Planners. We look forward to making your event truly memorable.
                 </div>
                 <div class="summary-right">
                     <div>Subtotal: ₹ <span id="subtotal">1.00</span></div>
-                    <div>Tax: ₹ <span id="tax">0.00</span></div>
                     <strong>Total: ₹ <span id="total">1.00</span></strong>
                 </div>
             </div>
@@ -363,16 +362,23 @@
     <button class="download-btn" onclick="downloadPDF()">⬇ Download PDF</button>
 
     <script>
+
         function addRow() {
+            const table = document.querySelector("#table tbody");
+            const row = document.createElement("tr");
+
             row.innerHTML = `
-    <td><input placeholder="Service"></td>
-    <td><input type="number" value="1" oninput="calc()"></td>
-    <td><input type="number" value="1" oninput="calc()"></td>
-    <td class="amt">1.00</td>
-    <td><button class="remove-btn" onclick="removeRow(this)">X</button></td>
-`;
+        <td><input placeholder="Service"></td>
+        <td><input type="number" value="1" oninput="calc()"></td>
+        <td><input type="number" value="1" oninput="calc()"></td>
+        <td class="amt">1.00</td>
+        <td><button class="remove-btn" onclick="removeRow(this)">X</button></td>
+    `;
+
+            table.appendChild(row);
             calc();
         }
+
 
         function removeRow(btn) {
             btn.closest("tr").remove();
@@ -382,18 +388,23 @@
 
         function calc() {
             let subtotal = 0;
-            document.querySelectorAll(".amt").forEach(cell => {
-                const row = cell.closest("tr");
-                const price = row.cells[2].querySelector("input").value || 0;
-                const qty = row.cells[3].querySelector("input").value || 0;
+
+            document.querySelectorAll("#table tbody tr").forEach(row => {
+
+                const price = parseFloat(row.cells[1].querySelector("input").value) || 0;
+                const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+
                 const amt = price * qty;
-                cell.innerText = amt.toFixed(2);
+
+                row.cells[3].innerText = amt.toFixed(2);
+
                 subtotal += amt;
             });
+
             document.getElementById("subtotal").innerText = subtotal.toFixed(2);
-            document.getElementById("tax").innerText = (subtotal * 0.1).toFixed(2);
-            document.getElementById("total").innerText = (subtotal * 1.1).toFixed(2);
+            document.getElementById("total").innerText = subtotal.toFixed(2);
         }
+
 
         async function downloadPDF() {
             const { jsPDF } = window.jspdf;
