@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: #e5e5e5;
+            font-family: 'Poppins', sans-serif;
+            padding: 30px;
+        }
+
+        .invoice-box {
+            width: 794px;
+            min-height: 1123px;
+            background: #ffffff;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* already added - keep this */
+        }
+
+        .content {
+            padding: 30px 70px;
+            padding-bottom: 120px;
+            /* space for fixed footer */
+        }
+
+        .hero {
+            height: 260px;
+            background-image: url("images/hamza-nouasria-jPPmXm8iapY-unsplash\ \(1\).jpg");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: translateZ(0);
+
+        }
+
+        .logo img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 30px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero div {
+            font-size: 16px;
+            /* slightly bigger */
+            font-weight: 500;
+        }
+
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .invoice-title {
+            position: absolute;
+
+            bottom: 60px;
+            color: white;
+            font-size: 48px;
+            letter-spacing: 6px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            padding: 30px 70px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 60px;
+            font-size: 14px;
+        }
+
+        .info-grid span {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .info-grid input {
+            border: none;
+            border-bottom: 1px solid #ddd;
+            outline: none;
+            padding: 4px 0;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        /* Control column widths */
+#table th:nth-child(1),
+#table td:nth-child(1) {
+    width: 45%;
+}
+
+#table th:nth-child(2),
+#table td:nth-child(2) {
+    width: 15%;
+}
+
+#table th:nth-child(3),
+#table td:nth-child(3) {
+    width: 10%;
+}
+
+#table th:nth-child(4),
+#table td:nth-child(4) {
+    width: 15%;
+}
+
+#table th:nth-child(5),
+#table td:nth-child(5) {
+    width: 10%;
+}
+
+        th {
+            text-align: left;
+            font-size: 13px;
+            padding: 14px 8px;
+            border-bottom: 2px solid #000;
+            color: #444;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 14px 8px;
+            border-bottom: 1px solid #e5e5e5;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        td input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+
+        /* Buttons */
+        .add-btn {
+            margin-top: 20px;
+            padding: 8px 18px;
+            background: #000;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .remove-btn {
+            background: #999;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* ===== SUMMARY ===== */
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+
+        .summary-right {
+            text-align: right;
+            min-width: 240px;
+        }
+
+        .summary-right div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-right strong {
+            font-size: 18px;
+        }
+
+        /* ===== FOOTER ===== */
+        /* MODIFY FOOTER */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111;
+            color: white;
+            padding: 18px 70px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        /* Download Button */
+        .download-btn {
+            margin: 30px auto;
+            display: block;
+            padding: 12px 28px;
+            background: #111;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="invoice" class="invoice-box">
+
+        <!-- HEADER IMAGE -->
+        <div class="hero">
+            <div class="hero-overlay"></div>
+
+
+            <div class="logo">
+                <img src="images/logo.png" crossorigin="anonymous">
+            </div>
+
+
+            <div style="color:white; font-size:14px; letter-spacing:2px; z-index:2;">
+                TRIVANDRUM | THIRUVALLA | KOCHI
+            </div>
+
+
+            <div class="invoice-title">INVOICE</div>
+        </div>
+        <div class="content">
+            <div class="section">
+                <div class="section-title">PERSONAL INFORMATION</div>
+                <div class="info-grid">
+    <div>
+        <span>Full Name:</span>
+        <input placeholder="Client Name">
+    </div>
+
+    <div>
+        <span>Invoice Date:</span>
+        <input type="date" id="invoiceDate">
+    </div>
+</div>
+            </div>
+
+            <table id="table">
+                <thead>
+                    <tr>
+
+                        <th>Item Description</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input placeholder="Service"></td>
+                        <td><input type="number" value="1" oninput="calc()"></td>
+                        <td><input type="number" value="1" oninput="calc()"></td>
+                        <td class="amt">1.00</td>
+                        <td><button class="remove-btn" onclick="removeRow(this)">X</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="add-btn" onclick="addRow()">+ Add Item</button>
+
+            <div class="summary">
+                <div>
+                    <div class="section-title">TERMS & CONDITIONS</div>
+                    Payment should be completed within 30 days of invoice date.
+                </div>
+                <div class="summary-right">
+                    <div>Subtotal: ₹ <span id="subtotal">1.00</span></div>
+                    <div>Tax: ₹ <span id="tax">0.00</span></div>
+                    <strong>Total: ₹ <span id="total">1.00</span></strong>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div>📞 +91 6238191673</div>
+            <div>✉ witnesseventplanners@gmail.com</div>
+            <div>📞 +91 9895684105</div>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="downloadPDF()">⬇ Download PDF</button>
+
+    <script>
+        function addRow() {
+            row.innerHTML = `
+    <td><input placeholder="Service"></td>
+    <td><input type="number" value="1" oninput="calc()"></td>
+    <td><input type="number" value="1" oninput="calc()"></td>
+    <td class="amt">1.00</td>
+    <td><button class="remove-btn" onclick="removeRow(this)">X</button></td>
+`;
+            calc();
+        }
+
+        function removeRow(btn) {
+            btn.closest("tr").remove();
+            calc();
+        }
+
+        function calc() {
+            let subtotal = 0;
+            document.querySelectorAll(".amt").forEach(cell => {
+                const row = cell.closest("tr");
+                const price = row.cells[2].querySelector("input").value || 0;
+                const qty = row.cells[3].querySelector("input").value || 0;
+                const amt = price * qty;
+                cell.innerText = amt.toFixed(2);
+                subtotal += amt;
+            });
+            document.getElementById("subtotal").innerText = subtotal.toFixed(2);
+            document.getElementById("tax").innerText = (subtotal * 0.1).toFixed(2);
+            document.getElementById("total").innerText = (subtotal * 1.1).toFixed(2);
+        }
+
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const invoice = document.getElementById("invoice");
+
+            // Select elements to hide
+            const actionHeader = document.querySelector("th:last-child");
+            const actionCells = document.querySelectorAll("#table tbody td:last-child");
+            const addBtn = document.querySelector(".add-btn");
+            const downloadBtn = document.querySelector(".download-btn");
+
+            // Hide them
+            actionHeader.style.display = "none";
+            actionCells.forEach(cell => cell.style.display = "none");
+            addBtn.style.display = "none";
+            downloadBtn.style.display = "none";
+
+            const canvas = await html2canvas(invoice, {
+                scale: window.devicePixelRatio * 2,
+                useCORS: true,
+                backgroundColor: "#ffffff"
+            });
+
+            const imgData = canvas.toDataURL("image/png", 1.0);
+
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 0, 0, pageWidth, imgHeight);
+            pdf.save("invoice.pdf");
+
+            // Show them again after PDF is generated
+            actionHeader.style.display = "";
+            actionCells.forEach(cell => cell.style.display = "");
+            addBtn.style.display = "";
+            downloadBtn.style.display = "";
+        }
+
+
+    </script>
+
+</body>
+
+</html>
