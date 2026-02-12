@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -19,7 +20,6 @@
         .invoice-box {
             width: 794px;
             height: 1123px;
-            /* FIXED HEIGHT */
             background: #ffffff;
             margin: auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -27,32 +27,50 @@
         }
 
         .content {
-            padding: 30px 70px;
+            padding: 10px 70px;
             padding-bottom: 120px;
-            /* space for fixed footer */
         }
 
-        .hero {
-            height: 260px;
-            background-image: url("images/hero.jpg  ");
-            background-size: cover;
-            background-position: center;
-            position: relative;
+
+        .logo {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+        }
 
+        .brand-text {
+            text-align: center;
+            line-height: 1.1;
+            margin-top: 5px;
+        }
+
+        .brand-main {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            font-weight: 700;
+            color: #d4af37;
+            letter-spacing: 1px;
+        }
+
+        .brand-sub {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-top: 0;
         }
 
 
         .logo img {
+            margin-top: -20px;
             width: 140px;
             height: 140px;
             object-fit: contain;
             display: block;
             position: relative;
             z-index: 2;
+            margin-bottom: -60px;   
         }
 
         .hero {
@@ -69,6 +87,15 @@
             align-items: center;
         }
 
+        .hero-location {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            letter-spacing: 3px;
+        }
 
 
         .invoice-title {
@@ -257,11 +284,15 @@
 
 
             <div class="logo">
-                <img src="images/logo.png" crossorigin="anonymous">
+                <img src="images/logocopy.png" crossorigin="anonymous">
+
+                <div class="brand-text">
+                    <div class="brand-main">Witness Event</div>
+                    <div class="brand-sub">Planners</div>
+                </div>
             </div>
 
-
-            <div style="color:white; font-size:14px; letter-spacing:2px; z-index:3; position:relative;">
+            <div class="hero-location">
                 TRIVANDRUM | THIRUVALLA | KOCHI
             </div>
 
